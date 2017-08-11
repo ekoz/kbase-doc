@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:fragment="headerFragment">
+	<meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+	<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+	<meta name="ctx" th:content="${#httpServletRequest.getContextPath()}"/>
+	<title th:text="${title}"></title>
+	<link href="http://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" />
+    <!-- <script src="http://cdn.ckeditor.com/4.7.1/full/ckeditor.js"></script> -->
+	<link th:href="@{/css/style.css}" rel="stylesheet" />
+    <script src="http://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+    <script src="http://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="http://cdn.bootcss.com/json2/20160511/json2.js"></script>
+    <script src="http://cdn.bootcss.com/layer/3.0.1/layer.min.js"></script>
+    <script src="http://cdn.bootcss.com/simple-ajax-uploader/2.6.2/SimpleAjaxUploader.min.js"></script>
+    <script th:src="@{/js/template-web.js}"></script>
+    
+    <script type="text/javascript">
+	    (function($){
+	    	'use strict';
+	    	
+	    	$.kbase = $.kbase || {};
+	    	$.extend($.kbase, {
+	    		/* 应用根路径，如 /kbaseui-std */
+	            ctx: $('meta[name="ctx"]').attr('content')
+	    	});
+	    })(jQuery);
+    </script>
+</head>
+</html>

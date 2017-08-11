@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head>
+	    <th:block th:include="script :: headerFragment" th:with="title='文档列表'"/>
+	</head>
+	<body>
+		<th:block th:include="body :: bodyFragment" />
+		
+		<button class="btn btn-primary" id="btnUpload">请选择文件上传</button>
+		<div id="sizeBox" style="width:300px;height:25px;"></div>
+		<div id="progress" style="width:300px;height:25px;"></div>
+		
+		<script type="text/javascript" th:src="@{/js/upload.js}"></script>
+		
+	</body>
+</html>

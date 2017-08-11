@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head>
+	    <th:block th:include="script :: headerFragment" th:with="title='文档编辑'"/>
+		<script src="http://cdn.ckeditor.com/4.7.1/standard-all/ckeditor.js"></script>
+		<style type="text/css">
+			/* Minimal styling to center the editor in this sample */
+			.container {
+				display: flex;
+				align-items: center;
+				text-align: center;
+			}
+	
+			.inner-container {
+				margin: 0 auto;
+			}
+		</style>
+	</head>
+
+	<body>
+		<th:block th:include="body :: bodyFragment" th:with="key='edit'" />
+		<input type="hidden" id="name" th:value="${#httpServletRequest.getParameter('name')}" />
+		<div class="container" >
+			<div class="inner-container">
+				<textarea cols="80" id="docEditor" name="docEditor" rows="10">
+					
+				</textarea>
+			</div>
+		</div>
+		<script type="text/javascript" th:src="@{/js/edit.js}"></script>
+	</body>
+</html>

@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head />
+
+	<body th:fragment="bodyFragment">
+		<div class="container">
+			<div class="row">
+				<a class="btn btn-default" th:href="@{/upload}">上传文件</a>
+				<a class="btn btn-default" th:href="@{/}">文件列表</a>
+				<button id="btnModify" class="btn btn-primary" _status="0" style="display:none;">编辑</button>
+				<button id="btnSaveAsVersion" class="btn btn-primary" style="display:none;">保存为版本</button>
+				<button id="btnDownload" class="btn btn-info" style="display:none;">下载</button>
+			</div>
+		</div>
+		<hr/>
+	</body>
+</html>

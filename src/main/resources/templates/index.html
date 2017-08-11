@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head>
+	    <th:block th:include="script :: headerFragment" th:with="title='文档列表'"/>
+	</head>
+	<body>
+		<th:block th:include="body :: bodyFragment" />
+		<table class="table">
+			<thead>
+				<tr>
+					<td width="30%">文件名称</td>
+					<td width="50%">文件路径</td>
+					<td width="10%">文件大小</td>
+					<td width="10%">&nbsp;</td>
+				</tr>
+			</thead>
+			<tbody id="list">
+				
+			</tbody>
+			<script id="templateList" type="text/html">
+				{{each $data item index}}
+					<tr>
+						<td><a href="javascript:void(0);">{{item.name}}</a></td>
+						<td>{{item.path}}</td>
+						<td>{{item.size}}</td>
+						<td><button class="btn btn-danger">删除</button></td>
+					</tr>
+				{{/each}}
+			</script>
+		</table>
+		
+		<script type="text/javascript" th:src="@{/js/index.js}"></script>
+	</body>
+</html>
