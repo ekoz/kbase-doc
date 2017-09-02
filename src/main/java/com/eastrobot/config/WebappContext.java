@@ -44,7 +44,14 @@ public class WebappContext {
 		
 		DefaultOfficeManagerConfiguration configuration = new DefaultOfficeManagerConfiguration();
 		if (openOffice.getPort() != null) {
-		    configuration.setPortNumber(Integer.parseInt(openOffice.getPort()));
+			String ports = openOffice.getPort();
+			String[] portArr = ports.split(",");
+			int[] portArrInt = new int[portArr.length];
+			int i = 0;
+			for (String port : portArr){
+				portArrInt[i++] = Integer.parseInt(port);
+			}
+		    configuration.setPortNumbers(portArrInt);
 		}
 		if (openOffice.getHome() != null) {
 		    configuration.setOfficeHome(new File(openOffice.getHome()));
