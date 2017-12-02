@@ -3,11 +3,14 @@
  */
 package com.eastrobot.web;
 
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.FilenameFilter;
 import java.io.IOException;
 import java.util.Calendar;
 
@@ -26,6 +29,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.util.ResourceUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
@@ -54,7 +58,8 @@ public class IndexController {
 	 * @return
 	 * @throws FileNotFoundException
 	 */
-	@RequestMapping("getDataList")
+	@ApiOperation(value="获取文件数据列表", notes="获取固定路径下的文件，并返回文件名，文件所在路径和文件大小")
+	@RequestMapping(value="getDataList", method=RequestMethod.POST)
 	public JSONArray getDataList() throws FileNotFoundException{
 		JSONArray arr = new JSONArray();
 		File dir = ResourceUtils.getFile("classpath:static/DATAS");
@@ -80,7 +85,11 @@ public class IndexController {
 	 * @throws FileNotFoundException
 	 * @throws IOException
 	 */
-	@RequestMapping(value="loadFileData", produces="text/plain;charset=utf-8")
+	@ApiOperation(value="根据指定的文件名称获取文件内容", notes="返回文件内容会自动过滤图片信息")
+	@ApiImplicitParams({
+		@ApiImplicitParam(name="name", value="文件相对路径", required=true, dataType="String")
+	})
+	@RequestMapping(value="loadFileData", produces="text/plain;charset=utf-8", method=RequestMethod.POST)
 	public String loadFileData(String name, HttpServletRequest request) throws FileNotFoundException, IOException{
 		File file = ResourceUtils.getFile("classpath:static/DATAS/" + name);
 		String basename = FilenameUtils.getBaseName(file.getName());
@@ -103,7 +112,12 @@ public class IndexController {
 	 * @return
 	 * @throws IOException
 	 */
-	@RequestMapping("loadFileImg")
+	@ApiOperation(value="加载图片内容", notes="获取word文档中内嵌的图片资源，返回图片内容")
+	@ApiImplicitParams({
+		@ApiImplicitParam(name="name", value="文件相对路径", required=true, dataType="String"),
+		@ApiImplicitParam(name="imgname", value="图片名称", required=true, dataType="String")
+	})
+	@RequestMapping(value="loadFileImg", method=RequestMethod.GET)
 	public ResponseEntity<byte[]> loadFileImg(String name, String imgname){
 		try {
 			String basename = FilenameUtils.getBaseName(name);
@@ -126,7 +140,11 @@ public class IndexController {
 	 * @param request
 	 * @return
 	 */
-	@RequestMapping("uploadData")
+	@ApiOperation(value="上传文件", notes="")
+	@ApiImplicitParams({
+		@ApiImplicitParam(name="uploadFile", value="待上传的文件", required=true, dataType="MultipartFile")
+	})
+	@RequestMapping(value="uploadData", method=RequestMethod.POST)
 	public JSONObject uploadData(@RequestParam("uploadFile") MultipartFile uploadFile, HttpServletRequest request){
 		JSONObject json = new JSONObject();
 		json.put("result", 1);
@@ -169,7 +187,12 @@ public class IndexController {
 	 * @param data
 	 * @throws IOException 
 	 */
-	@RequestMapping("saveFileData")
+	@ApiOperation(value="保存文件", notes="")
+	@ApiImplicitParams({
+		@ApiImplicitParam(name="name", value="文件相对路径", required=true, dataType="String"),
+		@ApiImplicitParam(name="data", value="文件内容", required=true, dataType="String")
+	})
+	@RequestMapping(value="saveFileData", method=RequestMethod.POST)
 	public JSONObject saveFileData(String name, String data, HttpServletRequest request){
 		//TODO 这是一个伪保存，只是修改了 HTML 内容，并未修改 file 文件，如果用户单击下载，依然会存在问题
 		//TODO 如果用户修改了图片，如何处理？
@@ -216,7 +239,11 @@ public class IndexController {
 	 * @param name
 	 * @return
 	 */
-	@RequestMapping("delete")
+	@ApiOperation(value="删除文件", notes="")
+	@ApiImplicitParams({
+		@ApiImplicitParam(name="name", value="文件相对路径", required=true, dataType="String")
+	})
+	@RequestMapping(value="delete", method=RequestMethod.POST)
 	public JSONObject delete(String name){
 		//TODO windows操作系统上如果html文件被占用则无法删除，是否可以用 File.creteTempFile 来解决？
 		JSONObject json = new JSONObject();
