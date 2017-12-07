@@ -80,7 +80,7 @@ public class HtmlUtils {
 	 * @return
 	 */
 	public static String replaceCharset(String data){
-		return StringUtils.replaceAll(data, "CONTENT=\"text/html; charset=gb2312\"", "CONTENT=\"text/html; charset=utf-8\"");
+		return StringUtils.replaceAll(data, "(?i)CONTENT=\"text/html; charset=gb2312\"", "CONTENT=\"text/html; charset=utf-8\"");
 	}
 	
 	/**
