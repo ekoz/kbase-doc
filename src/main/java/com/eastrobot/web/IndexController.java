@@ -96,9 +96,9 @@ public class IndexController {
 		String basename = FilenameUtils.getBaseName(file.getName());
 		File targetFile = new File(file.getParent() + "/" + basename + "/" + basename + "." + outputExtension);
 		if (targetFile.exists()){
-			logger.debug(HtmlUtils.getFileEncoding(targetFile));
+			//logger.debug(HtmlUtils.getFileEncoding(targetFile));
 			String data = IOUtils.toString(new FileInputStream(targetFile), HtmlUtils.getFileEncoding(targetFile));
-			logger.debug(data);
+			//logger.debug(data);
 			//获取文件头部，每个文件转换出的html头部样式都不一样，动态获取
 			//截图 <BODY 之前的所有代码
 			String header = HtmlUtils.HEAD_TEMPLATE;
@@ -185,8 +185,6 @@ public class IndexController {
 	            logger.error(String.format("failed conversion: %s [%db] to %s; %s; input file: %s", inputExtension, file.length(), outputExtension, e, file.getName()));
 	        }
 			
-//			File newFile = new File(targetDir.getAbsolutePath() + "/" + inputFilename + ".ekoz." + inputExtension);
-//			converter.convert(outputFile, newFile);
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 			json.put("result", 0);
@@ -220,14 +218,9 @@ public class IndexController {
 			//boolean is07Xml = false; //是否是07以后的文档（docx/xlsx/pptx/），如果是，需要将html转成97版本的office文件，再从97转成07，直接将html转成07存在问题
 			File file = ResourceUtils.getFile("classpath:static/DATAS/" + name);
 			File newFile = new File(file.getParent() + "/" + Calendar.getInstance().getTimeInMillis() + "_" + name);
-			if (name.toLowerCase().endsWith("x")){
-				//is07Xml = true;
-			}else{
+			if (!name.toLowerCase().endsWith("x")){
 				newFile = new File(file.getParent() + "/" + Calendar.getInstance().getTimeInMillis() + "_" + name + "x");
 			}
-//			if (!newFile.exists()){
-//				newFile.createNewFile();
-//			}
 			String basename = FilenameUtils.getBaseName(file.getName());
 			File targetFile = new File(file.getParent() + "/" + basename + "/" + basename + "." + outputExtension);
 			if (targetFile.exists()){
@@ -252,22 +245,6 @@ public class IndexController {
 		        	e.printStackTrace();
 		            logger.error(String.format("failed conversion: %s [%db] to %s; %s; input file: %s", FilenameUtils.getExtension(targetFile.getName()), targetFile.length(), FilenameUtils.getExtension(newFile.getName()), e, newFile.getName()));
 		        }
-//				if (is07Xml){
-//					//newFile = new File(file.getParent() + "/" + basename + "/1.doc");
-//					File finalFile = new File(file.getParent() + "/" + Calendar.getInstance().getTimeInMillis() + ".docx");
-//					if (!finalFile.exists()){
-//						finalFile.createNewFile();
-//					}
-//					try {
-//			        	long startTime = System.currentTimeMillis();
-//			        	converter.convert(newFile, finalFile);
-//			        	long conversionTime = System.currentTimeMillis() - startTime;
-//			        	logger.info(String.format("successful conversion: %s [%db] to %s in %dms", FilenameUtils.getExtension(newFile.getName()), newFile.length(), FilenameUtils.getExtension(finalFile.getName()), conversionTime));
-//			        } catch (Exception e) {
-//			        	e.printStackTrace();
-//			            logger.error(String.format("failed conversion: %s [%db] to %s; %s; input file: %s", FilenameUtils.getExtension(newFile.getName()), newFile.length(), FilenameUtils.getExtension(finalFile.getName()), e, newFile.getName()));
-//			        }
-//				}
 			}
 		} catch (FileNotFoundException e) {
 			json.put("result", 0);
