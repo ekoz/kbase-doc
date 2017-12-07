@@ -36,6 +36,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.eastrobot.config.SystemConstants;
 import com.eastrobot.config.WebappContext;
 import com.eastrobot.util.HtmlUtils;
 
@@ -95,10 +96,26 @@ public class IndexController {
 		String basename = FilenameUtils.getBaseName(file.getName());
 		File targetFile = new File(file.getParent() + "/" + basename + "/" + basename + "." + outputExtension);
 		if (targetFile.exists()){
+			logger.debug(HtmlUtils.getFileEncoding(targetFile));
 			String data = IOUtils.toString(new FileInputStream(targetFile), HtmlUtils.getFileEncoding(targetFile));
+			logger.debug(data);
+			//获取文件头部，每个文件转换出的html头部样式都不一样，动态获取
+			//截图 <BODY 之前的所有代码
+			String header = HtmlUtils.HEAD_TEMPLATE;
+			try{
+				header = data.substring(0, data.toLowerCase().indexOf("<body"));
+				String tmp = data.substring(data.toLowerCase().indexOf("<body"));
+				header += tmp.substring(0, tmp.indexOf(">") + 1);
+				header = HtmlUtils.replaceCharset(header);
+			}catch(StringIndexOutOfBoundsException e){
+				e.printStackTrace();
+				logger.error("html页面数据解析异常");
+			}
+			
+			request.getSession().setAttribute(SystemConstants.HTML_HEADER, header);
 			//TODO 如果是网络图片，如何处理？
 			//TODO 保存后再次打开html文档，如何处理？
-			data = HtmlUtils.replaceHtmlTag(data, "img", "src", "src=\"" + request.getContextPath() + "/index/loadFileImg?name=" + name + "&imgname=", "\"");
+			//data = HtmlUtils.replaceHtmlTag(data, "img", "src", "src=\"" + request.getContextPath() + "/index/loadFileImg?name=" + name + "&imgname=", "\"");
 			return data;
 		}
 		return "";
@@ -199,29 +216,58 @@ public class IndexController {
 		JSONObject json = new JSONObject();
 		json.put("result", 1);
 		try {
+			//DONE 优化底层 DefaultDocumentFormatRegistry.java 后可实现html转docx
+			//boolean is07Xml = false; //是否是07以后的文档（docx/xlsx/pptx/），如果是，需要将html转成97版本的office文件，再从97转成07，直接将html转成07存在问题
 			File file = ResourceUtils.getFile("classpath:static/DATAS/" + name);
+			File newFile = new File(file.getParent() + "/" + Calendar.getInstance().getTimeInMillis() + "_" + name);
+			if (name.toLowerCase().endsWith("x")){
+				//is07Xml = true;
+			}else{
+				newFile = new File(file.getParent() + "/" + Calendar.getInstance().getTimeInMillis() + "_" + name + "x");
+			}
+//			if (!newFile.exists()){
+//				newFile.createNewFile();
+//			}
 			String basename = FilenameUtils.getBaseName(file.getName());
 			File targetFile = new File(file.getParent() + "/" + basename + "/" + basename + "." + outputExtension);
 			if (targetFile.exists()){
 				//将html中的body内容替换为当前 data 数据
 				//String htmlData = IOUtils.toString(new FileInputStream(targetFile), HtmlUtils.getFileEncoding(targetFile));
-				String htmlData = HtmlUtils.HEAD_TEMPLATE + data + HtmlUtils.FOOT_TEMPLATE;
-				//TODO 如何处理文件编码？保存后尽管通过请求能访问中文内容，但是直接磁盘双击html文件显示乱码
+				String htmlData = (String)request.getSession().getAttribute(SystemConstants.HTML_HEADER) + data + HtmlUtils.FOOT_TEMPLATE;
+				//DONE 如何处理文件编码？保存后尽管通过请求能访问中文内容，但是直接磁盘双击html文件显示乱码
 				//add by eko.zhan at 2017-08-11 14:55 解决方案：重写Html头，编码修改为 utf-8
-				IOUtils.write(htmlData.getBytes(HtmlUtils.UTF8), new FileOutputStream(targetFile));
-				//TODO 由于html文件编码不正确，导致转换成word后文件编码也不正确
+				//IOUtils.write(htmlData.getBytes(HtmlUtils.UTF8), new FileOutputStream(targetFile));
+				IOUtils.write(htmlData.getBytes(), new FileOutputStream(targetFile));
+				//DONE 由于html文件编码不正确，导致转换成word后文件编码也不正确
 				//add by eko.zhan at 2017-08-11 15:05 上面处理了html编码后，转换的编码问题也相应解决了
 				//TODO 由html转换成doc会导致doc样式有误
 				WebappContext webappContext = WebappContext.get(request.getServletContext());
 				OfficeDocumentConverter converter = webappContext.getDocumentConverter();
 				try {
 		        	long startTime = System.currentTimeMillis();
-		        	converter.convert(targetFile, file);
+		        	converter.convert(targetFile, newFile);
 		        	long conversionTime = System.currentTimeMillis() - startTime;
-		        	logger.info(String.format("successful conversion: %s [%db] to %s in %dms", FilenameUtils.getExtension(targetFile.getName()), file.length(), outputExtension, conversionTime));
+		        	logger.info(String.format("successful conversion: %s [%db] to %s in %dms", FilenameUtils.getExtension(targetFile.getName()), targetFile.length(), FilenameUtils.getExtension(newFile.getName()), conversionTime));
 		        } catch (Exception e) {
-		            logger.error(String.format("failed conversion: %s [%db] to %s; %s; input file: %s", FilenameUtils.getExtension(file.getName()), file.length(), outputExtension, e, file.getName()));
+		        	e.printStackTrace();
+		            logger.error(String.format("failed conversion: %s [%db] to %s; %s; input file: %s", FilenameUtils.getExtension(targetFile.getName()), targetFile.length(), FilenameUtils.getExtension(newFile.getName()), e, newFile.getName()));
 		        }
+//				if (is07Xml){
+//					//newFile = new File(file.getParent() + "/" + basename + "/1.doc");
+//					File finalFile = new File(file.getParent() + "/" + Calendar.getInstance().getTimeInMillis() + ".docx");
+//					if (!finalFile.exists()){
+//						finalFile.createNewFile();
+//					}
+//					try {
+//			        	long startTime = System.currentTimeMillis();
+//			        	converter.convert(newFile, finalFile);
+//			        	long conversionTime = System.currentTimeMillis() - startTime;
+//			        	logger.info(String.format("successful conversion: %s [%db] to %s in %dms", FilenameUtils.getExtension(newFile.getName()), newFile.length(), FilenameUtils.getExtension(finalFile.getName()), conversionTime));
+//			        } catch (Exception e) {
+//			        	e.printStackTrace();
+//			            logger.error(String.format("failed conversion: %s [%db] to %s; %s; input file: %s", FilenameUtils.getExtension(newFile.getName()), newFile.length(), FilenameUtils.getExtension(finalFile.getName()), e, newFile.getName()));
+//			        }
+//				}
 			}
 		} catch (FileNotFoundException e) {
 			json.put("result", 0);
