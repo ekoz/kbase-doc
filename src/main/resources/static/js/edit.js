@@ -115,7 +115,14 @@ $.post($.kbase.ctx + '/index/loadFileData', {name: $('#name').val()}, function(d
 	CKEDITOR.on('instanceReady', function (event) {
         var editor = event.editor;
         editor.setData(data);
-        editor.setReadOnly(true); 
+        editor.setReadOnly(true);
+        
+    	window.setTimeout(function(){
+    		var imgList = $($('iframe')[0].contentWindow.document).find('img');
+    		$(imgList).each(function(i, img){
+    			$(img).attr('src', $.kbase.ctx + '/index/loadFileImg?name=' + $('#name').val() + '&imgname=' + $(img).attr('src'));
+    		});
+    	}, 100);
     });
 	
 }, 'text');
