@@ -120,7 +120,10 @@ $.post($.kbase.ctx + '/index/loadFileData', {name: $('#name').val()}, function(d
     	window.setTimeout(function(){
     		var imgList = $($('iframe')[0].contentWindow.document).find('img');
     		$(imgList).each(function(i, img){
-    			$(img).attr('src', $.kbase.ctx + '/index/loadFileImg?name=' + $('#name').val() + '&imgname=' + $(img).attr('src'));
+    			var _url = $(img).attr('src');
+    			if (_url.indexOf('http')==-1){
+    				$(img).attr('src', $.kbase.ctx + '/index/loadFileImg?name=' + $('#name').val() + '&imgname=' + $(img).attr('src'));
+    			}
     		});
     	}, 100);
     });

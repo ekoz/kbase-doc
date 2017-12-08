@@ -25,11 +25,25 @@
 
 ### 已知问题
 1. word中包含图片如何处理？目前是用Html正则将图片加上一个 地址 进行加载，这样在保存的时候，html文件的图片地址有异常
+
+	答：word 中的图片，不在后端进行处理，如果该图片是网络图片，可以进行正常访问吗，如果该图片是本地图片，前端采用js处理
+
 2. html 图片的正则未区分网络图片还是本地图片 
+
+	答：见第1点
+
 3. 用户修改word中的图片如何处理？
+
+	答：按照第1点处理后，不存在该问题
+
 4. 将html转换成doc后，文件内容格式有误
+
+	答：html直接转换成docx，采用 LibreOffice 转换，效果略优于 OpenOffice
+
 5. windows 操作系统上如何删除一个正在被占用的进程？
 6. 是否能很好的兼容 excel 和 ppt 的预览编辑功能 
+
+	答：暂时不能
 
 ### Restful Apis
 [http://localhost:8080/kbase-doc/swagger-ui.html](http://localhost:8080/kbase-doc/swagger-ui.html)
