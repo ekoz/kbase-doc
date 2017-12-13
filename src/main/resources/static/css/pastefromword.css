@@ -1,0 +1,41 @@
+body.document-editor {
+    width: 15.8cm;
+    min-height: 21cm;
+    padding: 1cm 2cm 2cm;
+    margin: 0.5cm auto;
+    border: 1px #D3D3D3 solid;
+    border-radius: 5px;
+    background: white;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+}
+
+body.document-editor, body.document-editor td, body.document-editor th {
+    font-size: 0.9em;
+    border: 1px solid #d3d3d3 !important;
+}
+
+body.document-editor table {
+    margin-top: 0.5cm;
+    border:1px solid #d3d3d3 !important;
+    border-spacing: 1px !important;
+}
+
+body.document-editor table td > p {
+    margin-top: 0;
+    margin-bottom: 0;
+    padding: 4px 0 3px 5px;
+}
+
+body.document-editor h1 {
+    margin-bottom: 1cm;
+}
+
+body.document-editor ol, body.document-editor ul, body.document-editor dl {
+    padding: 0 20px;
+}
+
+body.document-editor p {
+    margin-top: 0;
+    margin-bottom: 6px;
+    line-height: 1.4;
+}
