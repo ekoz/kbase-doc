@@ -44,6 +44,9 @@
 6. 是否能很好的兼容 excel 和 ppt 的预览编辑功能 
 
 	答：暂时不能
+	
+### 总结
+1. visio 文件可采用 LibreOffice 转换成 pdf 实现在线预览，OpenOffice无法实现
 
 ### Restful Apis
 [http://localhost:8080/kbase-doc/swagger-ui.html](http://localhost:8080/kbase-doc/swagger-ui.html)

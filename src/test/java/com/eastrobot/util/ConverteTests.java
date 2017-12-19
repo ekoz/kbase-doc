@@ -27,6 +27,18 @@ import org.junit.Test;
  * @version 1.0
  */
 public class ConverteTests {
+	
+	
+	
+	@Test
+	public void testVisioAsPdf(){
+		File inputFile = new File("E:/ConvertTester/TestFiles/I_am_a_vsdx.vsdx");
+		File outputFile = new File("E:/ConvertTester/TestFiles/I_am_a_vsdx_openoffice.pdf");
+//		if (!outputFile.exists()){
+//			outputFile.createNewFile();
+//		}
+		convert(inputFile, outputFile);
+	}
 
 	@Test
 	public void testSaveAsDocx() throws FileNotFoundException, IOException{
@@ -71,5 +83,25 @@ public class ConverteTests {
 		Map<DocumentFamily, Map<String, ?>> storePropertiesByFamily = formatByExtension.getStorePropertiesByFamily();
 		System.out.println(storePropertiesByFamily.size());
 		
+	}
+	
+	private void convert(File inputFile, File outputFile){
+		DefaultOfficeManagerConfiguration configuration = new DefaultOfficeManagerConfiguration();
+		configuration.setPortNumber(8100);
+		configuration.setOfficeHome(new File("D:/Program Files/LibreOffice"));
+//		configuration.setOfficeHome(new File("D:/Program Files/OpenOffice"));
+
+		OfficeManager officeManager = configuration.buildOfficeManager();
+        officeManager.start();
+        DocumentFormatRegistry formatRegistry = new DefaultDocumentFormatRegistry();
+        OfficeDocumentConverter converter = new OfficeDocumentConverter(officeManager, formatRegistry);
+        
+        try {
+        	 converter.convert(inputFile, outputFile);
+        } catch (Exception e){
+        	e.printStackTrace();
+		} finally {
+            officeManager.stop();
+        }
 	}
 }
