@@ -9,11 +9,12 @@
 	<packaging>jar</packaging>
 
 	<name>kbase-doc</name>
+	<description>Converter office files to html</description>
 
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>1.5.6.RELEASE</version>
+		<version>1.5.12.RELEASE</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 
@@ -87,7 +88,7 @@
 		    <artifactId>juniversalchardet</artifactId>
 		    <version>1.0.3</version>
 		</dependency>
-				
+		
 		<!-- <dependency>
 		    <groupId>org.jodconverter</groupId>
 		    <artifactId>jodconverter-core</artifactId>
@@ -107,17 +108,12 @@
 		<dependency>
 		    <groupId>org.apache.httpcomponents</groupId>
 		    <artifactId>httpclient</artifactId>
-		    <version>4.5.3</version>
+		    <version>4.5.5</version>
 		</dependency>
-		<!-- <dependency>
-		    <groupId>org.apache.httpcomponents</groupId>
-		    <artifactId>httpcore</artifactId>
-		    <version>4.4.6</version>
-		</dependency> -->
 		<dependency>
 		    <groupId>org.apache.httpcomponents</groupId>
 		    <artifactId>httpmime</artifactId>
-		    <version>4.5.3</version>
+		    <version>4.5.5</version>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/io.springfox/springfox-swagger2 -->
 		<dependency>
@@ -171,7 +167,4 @@
 			</plugin>
 		</plugins>
 	</build>
-
-
-	<description>Converter office files to html us</description>
 </project>
