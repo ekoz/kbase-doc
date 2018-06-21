@@ -9,8 +9,10 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.artofsolving.jodconverter.OfficeDocumentConverter;
 import org.artofsolving.jodconverter.document.DefaultDocumentFormatRegistry;
@@ -21,6 +23,8 @@ import org.artofsolving.jodconverter.office.DefaultOfficeManagerConfiguration;
 import org.artofsolving.jodconverter.office.OfficeManager;
 import org.junit.Test;
 
+import com.sun.star.document.UpdateDocMode;
+
 /**
  * @author <a href="mailto:eko.z@outlook.com">eko.zhan</a>
  * @date 2017年12月6日 下午7:55:08
@@ -29,6 +33,12 @@ import org.junit.Test;
 public class ConverteTests {
 	
 	
+	@Test
+	public void testEncrypt(){
+		File inputFile = new File("E:/ConvertTester/encrypt/I_am_encrypt.docx");
+		File outputFile = new File("E:/ConvertTester/encrypt/I_am_encrypt.html");
+		convert(inputFile, outputFile, "xiaoi");
+	}
 	
 	@Test
 	public void testVisioAsPdf(){
@@ -41,12 +51,20 @@ public class ConverteTests {
 	}
 
 	@Test
-	public void testSaveAsDocx() throws FileNotFoundException, IOException{
+	public void testDocToDocx() throws FileNotFoundException, IOException{
 		
-		File inputFile = new File("D:/Workspace/kbase-doc/target/classes/static/DATAS/1512561737109/1.doc");
-		File outputFile = new File("D:/Workspace/kbase-doc/target/classes/static/DATAS/1512561737109/1.docx");
-		IOUtils.copy(new FileInputStream(inputFile), new FileOutputStream(outputFile));
+		File inputFile = new File("E:/ConvertTester/CeairFile/2015120209414170.doc");
+		File outputFile = new File("E:/ConvertTester/CeairFile/2015120209414170.docx");
+		//IOUtils.copy(new FileInputStream(inputFile), new FileOutputStream(outputFile));
+		convert(inputFile, outputFile);
+	}
+	
+	@Test
+	public void testPptToPdf() throws FileNotFoundException, IOException{
 		
+		File inputFile = new File("E:/ConvertTester/ppt/1527243826237.ppt");
+		File outputFile = new File("E:/ConvertTester/ppt/1527243826237.pdf");
+		convert(inputFile, outputFile);
 	}
 	
 	@Test
@@ -104,4 +122,36 @@ public class ConverteTests {
             officeManager.stop();
         }
 	}
+	
+	private void convert(File inputFile, File outputFile, String password){
+		DefaultOfficeManagerConfiguration configuration = new DefaultOfficeManagerConfiguration();
+		configuration.setPortNumber(8100);
+		configuration.setOfficeHome(new File("D:/Program Files/LibreOffice"));
+//		configuration.setOfficeHome(new File("D:/Program Files/OpenOffice"));
+
+		OfficeManager officeManager = configuration.buildOfficeManager();
+        officeManager.start();
+        DocumentFormatRegistry formatRegistry = new DefaultDocumentFormatRegistry();
+        OfficeDocumentConverter converter = new OfficeDocumentConverter(officeManager, formatRegistry);
+        Map<String,?> defaultLoadProperties = createDefaultLoadProperties(password);
+        converter.setDefaultLoadProperties(defaultLoadProperties);
+        try {
+        	 converter.convert(inputFile, outputFile);
+        } catch (Exception e){
+        	e.printStackTrace();
+		} finally {
+            officeManager.stop();
+        }
+	}
+	
+	private Map<String,Object> createDefaultLoadProperties(String password) {
+        Map<String,Object> loadProperties = new HashMap<String,Object>();
+        loadProperties.put("Hidden", true);
+        loadProperties.put("ReadOnly", true);
+        loadProperties.put("UpdateDocMode", UpdateDocMode.QUIET_UPDATE);
+        if (StringUtils.isNotBlank(password)){
+            loadProperties.put("Password", password);
+        }
+        return loadProperties;
+    }
 }
