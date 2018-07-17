@@ -47,6 +47,8 @@
 	
 ### 总结
 1. visio 文件可采用 LibreOffice 转换成 pdf 实现在线预览，OpenOffice无法实现
+2. LibreOffice 支持转换加密的 office 文件，前提是给出明文密码。详见 [ConverteTests#testEncrypt](src/test/java/com/eastrobot/util/ConverteTests.java)
+3. pdf 文件可以调用 pdf2dom 来实现转换 html，从而也可以在线编辑。详见 [PdfToHtmlTests#pdf2html](src/test/java/com/eastrobot/util/PdfToHtmlTests.java)
 
 ### Restful Apis
 [http://localhost:8080/kbase-doc/swagger-ui.html](http://localhost:8080/kbase-doc/swagger-ui.html)
