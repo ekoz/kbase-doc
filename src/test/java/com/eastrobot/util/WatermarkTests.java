@@ -29,7 +29,7 @@ import org.apache.poi.xssf.usermodel.XSSFTextBox;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.junit.Test;
 
-import com.eastrobot.service.impl.WaterMarkServiceImpl;
+import com.eastrobot.service.impl.WatermarkServiceImpl;
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.Element;
 import com.itextpdf.text.Font;
@@ -49,7 +49,7 @@ import com.itextpdf.text.pdf.PdfStamper;
  * @date 2018年8月31日 下午1:41:38
  * @version 1.0
  */
-public class WaterMarkTests extends BaseTests {
+public class WatermarkTests extends BaseTests {
 
 	/**
 	 * 给 docx 文件加水印
@@ -60,7 +60,7 @@ public class WaterMarkTests extends BaseTests {
 	public void testDocx() throws IOException {
 		String filepath = "E:\\ConvertTester\\docx\\NVR5X-I人脸比对配置-ekozhan.docx";
 
-		WaterMarkServiceImpl service = new WaterMarkServiceImpl();
+		WatermarkServiceImpl service = new WatermarkServiceImpl();
 		byte[] bytes = service.handle(new File(filepath), "中华民国100");
 		//		FileOutputStream out = new FileOutputStream("E:\\1.docx");
 		//		IOUtils.write(bytes, out);

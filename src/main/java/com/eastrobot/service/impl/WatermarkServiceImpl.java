@@ -12,11 +12,8 @@ import java.io.OutputStream;
 
 import javax.xml.namespace.QName;
 
-import org.apache.poi.ddf.EscherComplexProperty;
-import org.apache.poi.ddf.EscherContainerRecord;
-import org.apache.poi.ddf.EscherOptRecord;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.hwpf.HWPFDocument;
-import org.apache.poi.hwpf.usermodel.OfficeDrawing;
 import org.apache.poi.util.IOUtils;
 import org.apache.poi.xwpf.model.XWPFHeaderFooterPolicy;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
@@ -25,7 +22,7 @@ import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.xmlbeans.XmlObject;
 import org.springframework.stereotype.Service;
 
-import com.eastrobot.service.WaterMarkService;
+import com.eastrobot.service.WatermarkService;
 
 /**
  * @author <a href="mailto:eko.z@outlook.com">eko.zhan</a>
@@ -33,13 +30,24 @@ import com.eastrobot.service.WaterMarkService;
  * @version 1.0
  */
 @Service
-public class WaterMarkServiceImpl implements WaterMarkService {
+public class WatermarkServiceImpl implements WatermarkService {
+	
+	private final static String DEFAULT_WATERMARK = "powered by eko.zhan";
+	private final static String DEFAULT_FONT_COLOR = "#d8d8d8";
 
+	@Override
 	public byte[] handle(File originFile, String watermark) throws IOException {
+		return handle(originFile, watermark, DEFAULT_FONT_COLOR);
+	}
+
+	@Override
+	public byte[] handle(File originFile, String watermark, String color) throws IOException {
+		watermark = StringUtils.isBlank(watermark)?DEFAULT_WATERMARK:watermark;
+		color = StringUtils.isBlank(color)?DEFAULT_FONT_COLOR:color;
 		if (originFile.getName().toLowerCase().endsWith("docx")) {
 			try (InputStream in = new FileInputStream(originFile)){
 				XWPFDocument doc = new XWPFDocument(in);
-				addWaterMark(doc, watermark);
+				addWaterMark(doc, watermark, color);
 				try (OutputStream out = new FileOutputStream(originFile)){
 					doc.write(out);
 					doc.close();
@@ -49,7 +57,7 @@ public class WaterMarkServiceImpl implements WaterMarkService {
 		} else if (originFile.getName().toLowerCase().endsWith("doc")) {
 			try (InputStream in = new FileInputStream(originFile)){
 				HWPFDocument doc = new HWPFDocument(in);
-				addWaterMark(doc, watermark);
+				addWaterMark(doc, watermark, color);
 				try (OutputStream out = new FileOutputStream(originFile)){
 					doc.write(out);
 					doc.close();
@@ -60,7 +68,10 @@ public class WaterMarkServiceImpl implements WaterMarkService {
 		return null;
 	}
 
-	private void addWaterMark(Object obj, String watermark) {
+	
+	
+
+	private void addWaterMark(Object obj, String watermark, String color) {
 		if (obj instanceof XWPFDocument) {
 			XWPFDocument doc = (XWPFDocument) obj;
 			// create header-footer
@@ -81,7 +92,7 @@ public class WaterMarkServiceImpl implements WaterMarkService {
 			if (xmlobjects.length > 0) {
 				com.microsoft.schemas.vml.CTShape ctshape = (com.microsoft.schemas.vml.CTShape)xmlobjects[0];
 				// set fill color
-				ctshape.setFillcolor("#d8d8d8");
+				ctshape.setFillcolor(color);
 				// set rotation
 				ctshape.setStyle(ctshape.getStyle() + ";rotation:315");
 			}
@@ -89,5 +100,4 @@ public class WaterMarkServiceImpl implements WaterMarkService {
 			
 		}
 	}
-
 }

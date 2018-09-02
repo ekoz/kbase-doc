@@ -36,6 +36,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.eastrobot.config.BaseController;
 import com.eastrobot.config.SystemConstants;
 import com.eastrobot.config.WebappContext;
 import com.eastrobot.util.HtmlUtils;
@@ -47,7 +48,7 @@ import com.eastrobot.util.HtmlUtils;
  */
 @RequestMapping("index")
 @RestController
-public class IndexController {
+public class IndexController extends BaseController {
 	
 	private final static Logger logger = LoggerFactory.getLogger(IndexController.class);
 	
@@ -234,17 +235,7 @@ public class IndexController {
 				//DONE 由于html文件编码不正确，导致转换成word后文件编码也不正确
 				//add by eko.zhan at 2017-08-11 15:05 上面处理了html编码后，转换的编码问题也相应解决了
 				//TODO 由html转换成doc会导致doc样式有误
-				WebappContext webappContext = WebappContext.get(request.getServletContext());
-				OfficeDocumentConverter converter = webappContext.getDocumentConverter();
-				try {
-		        	long startTime = System.currentTimeMillis();
-		        	converter.convert(targetFile, newFile);
-		        	long conversionTime = System.currentTimeMillis() - startTime;
-		        	logger.info(String.format("successful conversion: %s [%db] to %s in %dms", FilenameUtils.getExtension(targetFile.getName()), targetFile.length(), FilenameUtils.getExtension(newFile.getName()), conversionTime));
-		        } catch (Exception e) {
-		        	e.printStackTrace();
-		            logger.error(String.format("failed conversion: %s [%db] to %s; %s; input file: %s", FilenameUtils.getExtension(targetFile.getName()), targetFile.length(), FilenameUtils.getExtension(newFile.getName()), e, newFile.getName()));
-		        }
+				convert(targetFile, newFile);
 			}
 		} catch (FileNotFoundException e) {
 			json.put("result", 0);
