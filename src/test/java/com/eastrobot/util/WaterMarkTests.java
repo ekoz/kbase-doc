@@ -152,21 +152,21 @@ public class WaterMarkTests extends BaseTests {
 		File destFile = new File("E:/ConvertTester/TestFiles/I_am_a_vsdx_libreoffice_watermark.pdf");
 		//转换成 pdf 后利用 itext 加水印 
 		PdfReader reader = new PdfReader(new FileInputStream(outputFile));
-        PdfStamper stamper = new PdfStamper(reader, new FileOutputStream(destFile));
-        int pageNo = reader.getNumberOfPages();
-        Font f = new Font(FontFamily.HELVETICA, 28);
-        Phrase p = new Phrase("Xiaoi Robot", f);
-        for (int i=1;i<=pageNo;i++) {
-        	PdfContentByte over = stamper.getOverContent(i);
-            over.saveState();
-            PdfGState gs1 = new PdfGState();
-            gs1.setFillOpacity(0.5f);
-            over.setGState(gs1);
-            ColumnText.showTextAligned(over, Element.ALIGN_CENTER, p, 297, 450, 0);
-            over.restoreState();
-        }
-        stamper.close();
-        reader.close();
+		PdfStamper stamper = new PdfStamper(reader, new FileOutputStream(destFile));
+		int pageNo = reader.getNumberOfPages();
+		Font f = new Font(FontFamily.HELVETICA, 28);
+		Phrase p = new Phrase("Xiaoi Robot", f);
+		for (int i=1;i<=pageNo;i++) {
+			PdfContentByte over = stamper.getOverContent(i);
+			over.saveState();
+			PdfGState gs1 = new PdfGState();
+			gs1.setFillOpacity(0.5f);
+			over.setGState(gs1);
+			ColumnText.showTextAligned(over, Element.ALIGN_CENTER, p, 297, 450, 0);
+			over.restoreState();
+		}
+		stamper.close();
+		reader.close();
 	}
 	/**
 	 * pdf 用图片加水印
@@ -186,37 +186,37 @@ public class WaterMarkTests extends BaseTests {
 		final String IMG = "D:\\Xiaoi\\logo\\logo.png";
 		//转换成 pdf 后利用 itext 加水印 
 		PdfReader reader = new PdfReader(new FileInputStream(outputFile));
-        PdfStamper stamper = new PdfStamper(reader, new FileOutputStream(destFile));
-        int pageNo = reader.getNumberOfPages();
-     // text watermark
-        Font f = new Font(FontFamily.HELVETICA, 30);
-        Phrase p = new Phrase("Xiaoi Robot Image", f);
-        // image watermark
-        Image img = Image.getInstance(IMG);
-        float w = img.getScaledWidth();
-        float h = img.getScaledHeight();
-        // transparency
-        PdfGState gs1 = new PdfGState();
-        gs1.setFillOpacity(0.5f);
-        // properties
-        PdfContentByte over;
-        Rectangle pagesize;
-        float x, y;
-        // loop over every page
-        for (int i = 1; i <= pageNo; i++) {
-            pagesize = reader.getPageSizeWithRotation(i);
-            x = (pagesize.getLeft() + pagesize.getRight()) / 2;
-            y = (pagesize.getTop() + pagesize.getBottom()) / 2;
-            over = stamper.getOverContent(i);
-            over.saveState();
-            over.setGState(gs1);
-            if (i % 2 == 1)
-                ColumnText.showTextAligned(over, Element.ALIGN_CENTER, p, x, y, 0);
-            else
-                over.addImage(img, w, 0, 0, h, x - (w / 2), y - (h / 2));
-            over.restoreState();
-        }
-        stamper.close();
-        reader.close();
+		PdfStamper stamper = new PdfStamper(reader, new FileOutputStream(destFile));
+		int pageNo = reader.getNumberOfPages();
+		// text watermark
+		Font f = new Font(FontFamily.HELVETICA, 30);
+		Phrase p = new Phrase("Xiaoi Robot Image", f);
+		// image watermark
+		Image img = Image.getInstance(IMG);
+		float w = img.getScaledWidth();
+		float h = img.getScaledHeight();
+		// transparency
+		PdfGState gs1 = new PdfGState();
+		gs1.setFillOpacity(0.5f);
+		// properties
+		PdfContentByte over;
+		Rectangle pagesize;
+		float x, y;
+		// loop over every page
+		for (int i = 1; i <= pageNo; i++) {
+			pagesize = reader.getPageSizeWithRotation(i);
+			x = (pagesize.getLeft() + pagesize.getRight()) / 2;
+			y = (pagesize.getTop() + pagesize.getBottom()) / 2;
+			over = stamper.getOverContent(i);
+			over.saveState();
+			over.setGState(gs1);
+			if (i % 2 == 1)
+				ColumnText.showTextAligned(over, Element.ALIGN_CENTER, p, x, y, 0);
+			else
+				over.addImage(img, w, 0, 0, h, x - (w / 2), y - (h / 2));
+			over.restoreState();
+		}
+		stamper.close();
+		reader.close();
 	}
 }
