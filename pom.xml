@@ -22,6 +22,11 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<java.version>1.8</java.version>
+		<fastjson.version>1.2.35</fastjson.version>
+		<poi.version>3.16</poi.version>
+		<commons.lang3.version>3.6</commons.lang3.version>
+		<commons.io.version>2.5</commons.io.version>
+		<swagger.version>2.7.0</swagger.version>
 	</properties>
 	
 	<dependencies>
@@ -36,17 +41,17 @@
 		<dependency>
 		    <groupId>com.alibaba</groupId>
 		    <artifactId>fastjson</artifactId>
-		    <version>1.2.35</version>
+		    <version>${fastjson.version}</version>
 		</dependency>
 		<dependency>
 		    <groupId>org.apache.poi</groupId>
 		    <artifactId>poi-ooxml</artifactId>
-		    <version>3.16</version>
+		    <version>${poi.version}</version>
 		</dependency>
 		<dependency>
 		    <groupId>org.apache.poi</groupId>
 		    <artifactId>poi-scratchpad</artifactId>
-		    <version>3.16</version>
+		    <version>${poi.version}</version>
 		</dependency>
 		<dependency>
 		    <groupId>fr.opensagres.xdocreport</groupId>
@@ -89,37 +94,29 @@
 		    <version>1.0.3</version>
 		</dependency>
 		
-		<!-- <dependency>
-		    <groupId>org.jodconverter</groupId>
-		    <artifactId>jodconverter-core</artifactId>
-		    <version>4.0.0-RELEASE</version>
-		</dependency> -->
-		
 		<dependency>
 		    <groupId>org.apache.commons</groupId>
 		    <artifactId>commons-lang3</artifactId>
-		    <version>3.6</version>
+		    <version>${commons.lang3.version}</version>
 		</dependency>
 		<dependency>
 		    <groupId>commons-io</groupId>
 		    <artifactId>commons-io</artifactId>
-		    <version>2.5</version>
+		    <version>${commons.io.version}</version>
 		</dependency>
 		<dependency>
 		    <groupId>org.apache.httpcomponents</groupId>
 		    <artifactId>httpclient</artifactId>
-		    <version>4.5.5</version>
 		</dependency>
 		<dependency>
 		    <groupId>org.apache.httpcomponents</groupId>
 		    <artifactId>httpmime</artifactId>
-		    <version>4.5.5</version>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/io.springfox/springfox-swagger2 -->
 		<dependency>
 		    <groupId>io.springfox</groupId>
 		    <artifactId>springfox-swagger2</artifactId>
-		    <version>2.7.0</version>
+		    <version>${swagger.version}</version>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/org.webjars/swagger-ui -->
 <!-- 		<dependency>
@@ -131,7 +128,7 @@
 		<dependency>
 		    <groupId>io.springfox</groupId>
 		    <artifactId>springfox-swagger-ui</artifactId>
-		    <version>2.7.0</version>
+		    <version>${swagger.version}</version>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/net.sf.cssbox/pdf2dom -->
 		<dependency>
@@ -144,6 +141,12 @@
 		    <groupId>com.google.guava</groupId>
 		    <artifactId>guava</artifactId>
 		    <version>25.1-jre</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/com.itextpdf/itextpdf -->
+		<dependency>
+		    <groupId>com.itextpdf</groupId>
+		    <artifactId>itextpdf</artifactId>
+		    <version>5.5.13</version>
 		</dependency>
 		
 				

@@ -30,7 +30,7 @@ import com.sun.star.document.UpdateDocMode;
  * @date 2017年12月6日 下午7:55:08
  * @version 1.0
  */
-public class ConverteTests {
+public class ConvertTests extends BaseTests {
 	
 	
 	@Test
@@ -43,10 +43,7 @@ public class ConverteTests {
 	@Test
 	public void testVisioAsPdf(){
 		File inputFile = new File("E:/ConvertTester/TestFiles/I_am_a_vsdx.vsdx");
-		File outputFile = new File("E:/ConvertTester/TestFiles/I_am_a_vsdx_openoffice.pdf");
-//		if (!outputFile.exists()){
-//			outputFile.createNewFile();
-//		}
+		File outputFile = new File("E:/ConvertTester/TestFiles/I_am_a_vsdx_libreoffice.pdf");
 		convert(inputFile, outputFile);
 	}
 
@@ -103,55 +100,4 @@ public class ConverteTests {
 		
 	}
 	
-	private void convert(File inputFile, File outputFile){
-		DefaultOfficeManagerConfiguration configuration = new DefaultOfficeManagerConfiguration();
-		configuration.setPortNumber(8100);
-		configuration.setOfficeHome(new File("D:/Program Files/LibreOffice"));
-//		configuration.setOfficeHome(new File("D:/Program Files/OpenOffice"));
-
-		OfficeManager officeManager = configuration.buildOfficeManager();
-        officeManager.start();
-        DocumentFormatRegistry formatRegistry = new DefaultDocumentFormatRegistry();
-        OfficeDocumentConverter converter = new OfficeDocumentConverter(officeManager, formatRegistry);
-        
-        try {
-        	 converter.convert(inputFile, outputFile);
-        } catch (Exception e){
-        	e.printStackTrace();
-		} finally {
-            officeManager.stop();
-        }
-	}
-	
-	private void convert(File inputFile, File outputFile, String password){
-		DefaultOfficeManagerConfiguration configuration = new DefaultOfficeManagerConfiguration();
-		configuration.setPortNumber(8100);
-		configuration.setOfficeHome(new File("D:/Program Files/LibreOffice"));
-//		configuration.setOfficeHome(new File("D:/Program Files/OpenOffice"));
-
-		OfficeManager officeManager = configuration.buildOfficeManager();
-        officeManager.start();
-        DocumentFormatRegistry formatRegistry = new DefaultDocumentFormatRegistry();
-        OfficeDocumentConverter converter = new OfficeDocumentConverter(officeManager, formatRegistry);
-        Map<String,?> defaultLoadProperties = createDefaultLoadProperties(password);
-        converter.setDefaultLoadProperties(defaultLoadProperties);
-        try {
-        	 converter.convert(inputFile, outputFile);
-        } catch (Exception e){
-        	e.printStackTrace();
-		} finally {
-            officeManager.stop();
-        }
-	}
-	
-	private Map<String,Object> createDefaultLoadProperties(String password) {
-        Map<String,Object> loadProperties = new HashMap<String,Object>();
-        loadProperties.put("Hidden", true);
-        loadProperties.put("ReadOnly", true);
-        loadProperties.put("UpdateDocMode", UpdateDocMode.QUIET_UPDATE);
-        if (StringUtils.isNotBlank(password)){
-            loadProperties.put("Password", password);
-        }
-        return loadProperties;
-    }
 }
