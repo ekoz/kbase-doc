@@ -3,9 +3,7 @@
  */
 package com.eastrobot.web;
 
-import java.io.ByteArrayInputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Date;
 
@@ -13,11 +11,10 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.Assert;
 import org.springframework.util.ResourceUtils;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -47,6 +44,15 @@ public class WatermarkController extends BaseController {
 	@Autowired
 	WatermarkService watermarkService;
 	
+	/**
+	 * 输出文件demo https://o7planning.org/en/11765/spring-boot-file-download-example
+	 * @author eko.zhan at 2018年9月2日 下午4:26:10
+	 * @param file
+	 * @param text
+	 * @param color
+	 * @return
+	 * @throws IOException
+	 */
 	@ApiOperation(value="传入文件并返回水印文件", response=ResponseMessage.class)
 	@ApiImplicitParams({
 	        @ApiImplicitParam(name="file", value="待添加水印的文件", dataType="__file", required=true, paramType="form"),
@@ -54,7 +60,7 @@ public class WatermarkController extends BaseController {
 	        @ApiImplicitParam(name="color", value="颜色码，已#开头", dataType="string", required=false, paramType="form")
 	})
 	@PostMapping("/handle")
-	public ResponseEntity<InputStreamResource> handle(@RequestParam("file") MultipartFile file, @RequestParam(value="text", required=false) String text, @RequestParam(value="color", required=false) String color) throws IOException {
+	public ResponseEntity<ByteArrayResource> handle(@RequestParam("file") MultipartFile file, @RequestParam(value="text", required=false) String text, @RequestParam(value="color", required=false) String color) throws IOException {
 		if (!file.getOriginalFilename().toLowerCase().endsWith(".docx")) {
 			log.error("上传的文件必须是 docx 类型");
 		}
@@ -63,17 +69,15 @@ public class WatermarkController extends BaseController {
 		String filename = DateFormatUtils.format(new Date(), "yyyyMMddHHmmss") + "." + FilenameUtils.getExtension(file.getOriginalFilename());
 		File originFile = new File(dir + "/" + pardir + "/" + filename);
 		FileUtils.copyInputStreamToFile(file.getInputStream(), originFile);
-		byte[] bytes = watermarkService.handle(originFile, "");
-		
-		File targetFile = new File(originFile.getAbsolutePath());
-		InputStreamResource resource = new InputStreamResource(new FileInputStream(targetFile));
+		byte[] bytes = watermarkService.handle(originFile, text, color);
+		ByteArrayResource resource = new ByteArrayResource(bytes);
 		return ResponseEntity.ok()
 				// Content-Disposition
-				.header(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename=" + targetFile.getName())
+				.header(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename=" + originFile.getName())
 				// Content-Type
-				.contentType(getMediaType(targetFile.getName()))
+				.contentType(getMediaType(originFile.getName()))
 				// Contet-Length
-				.contentLength(targetFile.length()) //
+				.contentLength(bytes.length) //
 				.body(resource);
 	}
 }
