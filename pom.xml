@@ -148,6 +148,13 @@
 		    <artifactId>itextpdf</artifactId>
 		    <version>5.5.13</version>
 		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.docx4j/docx4j -->
+		<dependency>
+		    <groupId>org.docx4j</groupId>
+		    <artifactId>docx4j</artifactId>
+		    <version>3.3.3</version>
+		</dependency>
+				
 		
 				
 				

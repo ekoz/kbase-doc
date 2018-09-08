@@ -54,8 +54,9 @@ public class WatermarkWordTests extends BaseTests {
 	public void testDocx2() throws IOException {
 		String filepath = "E:\\ConvertTester\\docx\\NVR5X-I人脸比对配置-ekozhan.docx";
 		XWPFDocument doc = new XWPFDocument(new FileInputStream(filepath));
-		XWPFHeaderFooterPolicy footer = new XWPFHeaderFooterPolicy(doc);
-		footer.createWatermark("ekozhan123");
+		XWPFHeaderFooterPolicy policy = new XWPFHeaderFooterPolicy(doc);
+		
+		policy.createWatermark("ekozhan123");
 		doc.write(new FileOutputStream("E:\\ConvertTester\\docx\\NVR5X-I人脸比对配置-ekozhan-11.docx"));
 		doc.close();
 	}
