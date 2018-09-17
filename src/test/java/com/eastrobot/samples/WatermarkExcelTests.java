@@ -1,7 +1,7 @@
 /*
  * Power by www.xiaoi.com
  */
-package com.eastrobot.util;
+package com.eastrobot.samples;
 
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;

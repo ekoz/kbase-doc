@@ -1,7 +1,7 @@
 /*
  * Power by www.xiaoi.com
  */
-package com.eastrobot.util;
+package com.eastrobot.samples;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -23,6 +23,7 @@ import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.junit.Test;
 
 import com.eastrobot.service.impl.WatermarkServiceImpl;
+import com.eastrobot.util.BaseTests;
 
 
 /**

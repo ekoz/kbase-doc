@@ -1,16 +1,26 @@
 package com.eastrobot.samples;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.Date;
 
+import javax.xml.bind.JAXBElement;
+
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.time.DateFormatUtils;
+import org.docx4j.Docx4J;
 import org.docx4j.XmlUtils;
 import org.docx4j.jaxb.Context;
 import org.docx4j.openpackaging.packages.WordprocessingMLPackage;
 import org.docx4j.openpackaging.parts.PartName;
+import org.docx4j.openpackaging.parts.WordprocessingML.BinaryPartAbstractImage;
 import org.docx4j.openpackaging.parts.WordprocessingML.HeaderPart;
 import org.docx4j.openpackaging.parts.WordprocessingML.ImagePngPart;
 import org.docx4j.openpackaging.parts.relationships.RelationshipsPart.AddPartBehaviour;
 import org.docx4j.relationships.Relationship;
+import org.docx4j.vml.CTFill;
+import org.docx4j.wml.CTBackground;
 import org.docx4j.wml.Hdr;
 import org.docx4j.wml.ObjectFactory;
 import org.docx4j.wml.SectPr;
@@ -43,7 +53,15 @@ public class WatermarkPicture
     	DOCX_OUT = "E:\\ConvertTester\\docx\\NVR5X-I人脸比对配置-ekozhan.docx";
 
     	WatermarkPicture sample = new WatermarkPicture();
-        sample.addWaterMark();
+    	
+
+        File f = new File(DOCX_OUT);
+//    	wordMLPackage = WordprocessingMLPackage.createPackage();
+    	
+//        WordprocessingMLPackage wordMLPackage = WordprocessingMLPackage.load(f);
+        WordprocessingMLPackage wordMLPackage = Docx4J.load(f);
+        sample.addWaterMark(wordMLPackage);
+//    	sample.addBackground(wordMLPackage);
     }
 
     static ObjectFactory factory = Context.getWmlObjectFactory();
@@ -52,16 +70,10 @@ public class WatermarkPicture
     private byte[] image;    
     private WordprocessingMLPackage wordMLPackage;
     
-    public void addWaterMark() throws Exception
+    public void addWaterMark(WordprocessingMLPackage wordMLPackage) throws Exception
     {
-    	
     	image = this.getImage();
-
-        File f = new File(DOCX_OUT);
-//    	wordMLPackage = WordprocessingMLPackage.createPackage();
-    	
-    	wordMLPackage = WordprocessingMLPackage.load(f);
-        
+    	this.wordMLPackage = wordMLPackage;
     	// A watermark is defined in the headers, which are in turn set in sectPr
     	wordMLPackage.getMainDocumentPart().getContents().getBody().setSectPr(createSectPr());
 
@@ -69,6 +81,54 @@ public class WatermarkPicture
         wordMLPackage.save(file2);
 
     }
+    
+    
+	public void addBackground(WordprocessingMLPackage wordMLPackage) throws Exception
+    {
+    	
+    	image = this.getImage();
+
+    	BinaryPartAbstractImage imagePartBG = BinaryPartAbstractImage.createImagePart(wordMLPackage, image);
+//    	wordMLPackage.getMainDocumentPart().getContents().setBackground(createBackground(imagePartBG.getRelLast().getId()));
+    	org.docx4j.wml.CTBackground background = wordMLPackage.getMainDocumentPart().getContents().getBackground();
+    	if (background==null) {
+    		background = org.docx4j.jaxb.Context.getWmlObjectFactory().createCTBackground();
+    	}
+//    	background.setColor("FF0000");
+    	background.setColor("000000");
+    	wordMLPackage.getMainDocumentPart().getContents().setBackground(background);
+    	
+    	String format = DateFormatUtils.format(new Date(), "yyyyMMddHHmmss");
+    	File file2 = new File("E:\\ConvertTester\\docx\\docx4j_" + format + ".docx");
+        Docx4J.save(wordMLPackage, file2);
+    }
+	
+	private static CTBackground createBackground(String rId) {
+
+		org.docx4j.wml.ObjectFactory wmlObjectFactory = new org.docx4j.wml.ObjectFactory();
+
+		CTBackground background = wmlObjectFactory.createCTBackground();
+		background.setColor("#FF0000");
+		if (true) return background;
+//		background.setColor("FFFFFF");
+		org.docx4j.vml.ObjectFactory vmlObjectFactory = new org.docx4j.vml.ObjectFactory();
+		// Create object for background (wrapped in JAXBElement)
+		org.docx4j.vml.CTBackground background2 = vmlObjectFactory.createCTBackground();
+		JAXBElement<org.docx4j.vml.CTBackground> backgroundWrapped = vmlObjectFactory.createBackground(background2);
+		background.getAnyAndAny().add(backgroundWrapped);
+//		background2.setTargetscreensize("1024,768");
+//		background2.setVmlId("_x0000_s1025");
+//		background2.setBwmode(org.docx4j.vml.officedrawing.STBWMode.WHITE);
+		// Create object for fill
+		CTFill fill = vmlObjectFactory.createCTFill();
+		background2.setFill(fill);
+		fill.setTitle("Alien 1");
+		fill.setId(rId);
+		fill.setType(org.docx4j.vml.STFillType.FRAME);
+		fill.setRecolor(org.docx4j.vml.STTrueFalse.T);
+
+		return background;
+	}
     
 	private SectPr createSectPr() throws Exception {
 		
@@ -156,28 +216,30 @@ public class WatermarkPicture
 	
 	private byte[] getImage() throws IOException {
 
-		// Our utility method wants that as a byte array
-		java.io.InputStream is = new java.io.FileInputStream(imageFile );
-        long length = imageFile.length();    
-        // You cannot create an array using a long type.
-        // It needs to be an int type.
-        if (length > Integer.MAX_VALUE) {
-        	System.out.println("File too large!!");
-        }
-        byte[] bytes = new byte[(int)length];
-        int offset = 0;
-        int numRead = 0;
-        while (offset < bytes.length
-               && (numRead=is.read(bytes, offset, bytes.length-offset)) >= 0) {
-            offset += numRead;
-        }
-        // Ensure all the bytes have been read in
-        if (offset < bytes.length) {
-            System.out.println("Could not completely read file "+imageFile.getName());
-        }
-        is.close();
+//		// Our utility method wants that as a byte array
+//		java.io.InputStream is = new java.io.FileInputStream(imageFile );
+//        long length = imageFile.length();    
+//        // You cannot create an array using a long type.
+//        // It needs to be an int type.
+//        if (length > Integer.MAX_VALUE) {
+//        	System.out.println("File too large!!");
+//        }
+//        byte[] bytes = new byte[(int)length];
+//        int offset = 0;
+//        int numRead = 0;
+//        while (offset < bytes.length
+//               && (numRead=is.read(bytes, offset, bytes.length-offset)) >= 0) {
+//            offset += numRead;
+//        }
+//        // Ensure all the bytes have been read in
+//        if (offset < bytes.length) {
+//            System.out.println("Could not completely read file "+imageFile.getName());
+//        }
+//        is.close();
+//        return bytes;
+        
+        return IOUtils.toByteArray(new FileInputStream(imageFile));
 		
-        return bytes;
 	}
 	
     

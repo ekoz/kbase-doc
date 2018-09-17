@@ -1,7 +1,7 @@
 /*
  * Power by www.xiaoi.com
  */
-package com.eastrobot.util;
+package com.eastrobot.samples;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -11,6 +11,7 @@ import java.io.IOException;
 
 import org.junit.Test;
 
+import com.eastrobot.util.BaseTests;
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.Element;
 import com.itextpdf.text.Font;
