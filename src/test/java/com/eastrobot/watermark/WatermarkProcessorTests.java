@@ -21,4 +21,10 @@ public class WatermarkProcessorTests {
 		
 		WatermarkProcessor.process(file, imgFile);
 	}
+	
+	@Test
+	public void testProcessorText() throws WatermarkException {
+		File file = new File("E:\\ConvertTester\\excel\\什么是中央处理器.xlsx");
+		WatermarkProcessor.process(file, "小i机器人");
+	}
 }
