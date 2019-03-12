@@ -5,9 +5,12 @@ package com.eastrobot.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.Ordered;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
+
+import javax.annotation.Resource;
 
 /**
  * @author <a href="mailto:eko.z@outlook.com">eko.zhan</a>
@@ -16,6 +19,9 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
  */
 @Configuration
 public class WebMvcConfigurer extends WebMvcConfigurerAdapter {
+
+    @Resource
+    private SwaggerInterceptor swaggerInterceptor;
 
 	@Override
 	public void addViewControllers(ViewControllerRegistry registry) {
@@ -33,5 +39,10 @@ public class WebMvcConfigurer extends WebMvcConfigurerAdapter {
         .addResourceLocations("classpath:/META-INF/resources/");
         registry.addResourceHandler("/webjars*")
         .addResourceLocations("classpath:/META-INF/resources/webjars/");
+    }
+
+    @Override
+    public void addInterceptors(InterceptorRegistry registry) {
+        registry.addInterceptor(swaggerInterceptor).addPathPatterns("/watermark/**");
     }
 }
