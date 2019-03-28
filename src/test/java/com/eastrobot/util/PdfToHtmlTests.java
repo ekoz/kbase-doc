@@ -25,10 +25,12 @@ public class PdfToHtmlTests {
 
 	@Test
 	public void pdf2html() throws InvalidPasswordException, IOException, ParserConfigurationException{
-		PDDocument pdf = PDDocument.load(new File("E:/ConvertTester/ppt/推荐系统分享.pdf"));
+		String srcFilePath = "E:\\converter-html\\hsbc\\2004.pdf";
+		String destFilePath = srcFilePath + ".html";
+		PDDocument pdf = PDDocument.load(new File(srcFilePath));
 		PDFDomTree parser = new PDFDomTree();
 //		Document dom = parser.createDOM(pdf);
-		File htmlFile = new File("E:/ConvertTester/ppt/推荐系统分享.html");
+		File htmlFile = new File(destFilePath);
 		parser.writeText(pdf, new OutputStreamWriter(new FileOutputStream(htmlFile)));
 	}
 }

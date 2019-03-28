@@ -45,6 +45,20 @@
 
 	答：暂时不能
 	
+7. Cannot read JPEG2000 image: Java Advanced Imaging (JAI) Image I/O Tools are not installed
+```
+<dependency>
+    <groupId>com.github.jai-imageio</groupId>
+    <artifactId>jai-imageio-core</artifactId>
+    <version>1.4.0</version>
+</dependency>
+<dependency>
+    <groupId>com.github.jai-imageio</groupId>
+    <artifactId>jai-imageio-jpeg2000</artifactId>
+    <version>1.3.0</version>
+</dependency>
+```
+	
 ### 总结
 1. visio 文件可采用 LibreOffice 转换成 pdf 实现在线预览，OpenOffice无法实现
 2. LibreOffice 支持转换加密的 office 文件，前提是给出明文密码。详见 [ConverteTests#testEncrypt](src/test/java/com/eastrobot/util/ConverteTests.java)
