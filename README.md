@@ -1,8 +1,11 @@
 ## 文档在线预览编辑系统
-之前做过在线编辑文档的功能，使用 [webdav](https://www.webdavsystem.com/) 来实现在线编辑，
+
+[![Badge](https://img.shields.io/badge/link-996.icu-red.svg)](https://996.icu/#/zh_CN)
+
+> 之前做过在线编辑文档的功能，使用 [webdav](https://www.webdavsystem.com/) 来实现在线编辑，
 存在的问题是编辑页面保存不可控（是否可以保存为版本、是否可以放弃保存等）。如果大家有实现类似功能，希望能提供帮助。
 
-当前应用的主要功能是采用 openoffice 和 ckeditor 来实现文档的预览和编辑功能，先介绍操作步骤，再谈下面临的问题。
+> 当前应用的主要功能是采用 LibreOffice 和 ckeditor 来实现文档的预览和编辑功能，先介绍操作步骤，再谈下面临的问题。
 
 ### 操作步骤
 
