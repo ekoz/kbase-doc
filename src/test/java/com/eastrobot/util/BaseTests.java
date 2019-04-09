@@ -22,11 +22,14 @@ import com.sun.star.document.UpdateDocMode;
  * @version 1.0
  */
 public class BaseTests {
+
+
+    private String libreOffceDirPath = "D:/Program Files/LibreOffice";
 	
 	protected void convert(File inputFile, File outputFile){
 		DefaultOfficeManagerConfiguration configuration = new DefaultOfficeManagerConfiguration();
 		configuration.setPortNumber(8100);
-		configuration.setOfficeHome(new File("D:/Program Files/LibreOffice"));
+		configuration.setOfficeHome(new File(libreOffceDirPath));
 //		configuration.setOfficeHome(new File("D:/Program Files/OpenOffice"));
 
 		OfficeManager officeManager = configuration.buildOfficeManager();
@@ -46,7 +49,7 @@ public class BaseTests {
 	protected void convert(File inputFile, File outputFile, String password){
 		DefaultOfficeManagerConfiguration configuration = new DefaultOfficeManagerConfiguration();
 		configuration.setPortNumber(8100);
-		configuration.setOfficeHome(new File("D:/Program Files/LibreOffice"));
+		configuration.setOfficeHome(new File(libreOffceDirPath));
 //		configuration.setOfficeHome(new File("D:/Program Files/OpenOffice"));
 
 		OfficeManager officeManager = configuration.buildOfficeManager();
