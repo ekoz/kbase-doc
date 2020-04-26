@@ -162,7 +162,7 @@ public class IndexController extends BaseController {
 	 */
 	@ApiOperation(value="上传文件", notes="")
 	@ApiImplicitParams({
-		@ApiImplicitParam(name="uploadFile", value="待上传的文件", required=true, dataType="MultipartFile")
+		@ApiImplicitParam(name="uploadFile", value="待上传的文件", required=true, dataType="__file")
 	})
 	@RequestMapping(value="uploadData", method=RequestMethod.POST)
 	public JSONObject uploadData(@RequestParam("uploadFile") MultipartFile uploadFile, HttpServletRequest request){
