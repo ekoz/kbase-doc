@@ -15,7 +15,7 @@
 ![列表页面](src/main/resources/static/img/list.png?raw=true "列表页面")
 
 #### 上传文件
-上传文件时直接利用 openoffice 将文件转换成 html并保存
+上传文件时直接利用 [LibreOffice](https://www.libreoffice.org/) 将文件转换成 html并保存
 
 ![上传页面](src/main/resources/static/img/upload.png?raw=true "上传页面")
 
