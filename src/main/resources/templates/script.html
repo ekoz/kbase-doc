@@ -22,7 +22,7 @@
 	    	$.kbase = $.kbase || {};
 	    	$.extend($.kbase, {
 	    		/* 应用根路径，如 /kbaseui-std */
-	            ctx: $('meta[name="ctx"]').attr('content')
+	            ctx: $('meta[name="ctx"]').attr('content') || ''
 	    	});
 	    })(jQuery);
     </script>
