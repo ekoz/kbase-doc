@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.eastrobot.doc.config.SystemConstants;
 import com.eastrobot.doc.config.WebappContext;
 import com.eastrobot.doc.model.entity.Attachment;
+import com.eastrobot.doc.service.ConvertService;
 import com.eastrobot.doc.service.FileService;
 import com.eastrobot.doc.util.HtmlUtils;
 import com.google.common.collect.Lists;
@@ -20,6 +21,7 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.FileInputStream;
@@ -38,9 +40,8 @@ import java.util.Map;
 @Slf4j
 public class FileServiceImpl implements FileService {
 
-    private final String outputExtension = "html";
-
-    private Map<String, Integer> atConvertMap = Maps.newHashMap();
+    @Resource
+    ConvertService convertService;
 
     @Override
     public Boolean upload(MultipartFile multipartFile) {
@@ -51,8 +52,11 @@ public class FileServiceImpl implements FileService {
             File file = new File(targetDir.getAbsolutePath() + "/" + inputFilename + "." + inputExtension);
             FileCopyUtils.copy(multipartFile.getBytes(), file);
 
-            File outputFile = new File(targetDir.getAbsolutePath() + "/" + inputFilename + "/" + inputFilename + "." + outputExtension);
-            convert(file, outputFile);
+            File outputFile = new File(targetDir.getAbsolutePath() + "/" + inputFilename + "/" + inputFilename + "." + SystemConstants.OUTPUT_EXTENSION);
+
+            ServletRequestAttributes servletRequestAttributes = (ServletRequestAttributes) (RequestContextHolder.currentRequestAttributes());
+            RequestContextHolder.setRequestAttributes(servletRequestAttributes, true);
+            convertService.exec(file, outputFile);
         } catch (FileNotFoundException e){
             return false;
         } catch (IOException e){
@@ -62,37 +66,17 @@ public class FileServiceImpl implements FileService {
         }
     }
 
-    @Async
-    public void convert(File inputFile, File outputFile) throws FileNotFoundException {
-        HttpServletRequest request = ((ServletRequestAttributes) (RequestContextHolder.currentRequestAttributes())).getRequest();
-        WebappContext webappContext = WebappContext.get(request.getServletContext());
-        OfficeDocumentConverter converter = webappContext.getDocumentConverter();
-        String inputExtension = FilenameUtils.getExtension(inputFile.getName());
-
-        try {
-            long startTime = System.currentTimeMillis();
-            atConvertMap.put(inputFile.getName(), 1);
-            converter.convert(inputFile, outputFile);
-            atConvertMap.remove(inputFile.getName());
-            long conversionTime = System.currentTimeMillis() - startTime;
-            log.info(String.format("successful conversion: %s [%db] to %s in %dms", inputExtension, inputFile.length(), outputExtension, conversionTime));
-        } catch (Exception e) {
-            log.error(String.format("failed conversion: %s [%db] to %s; %s; input file: %s", inputExtension, inputFile.length(), outputExtension, e, inputFile.getName()));
-            throw new FileNotFoundException();
-        }
-    }
-
     @Override
     public String loadData(String filename) throws IOException {
         File file = ResourceUtils.getFile("classpath:static/DATAS/" + filename);
 
-        if (atConvertMap.get(file.getName())!=null) {
+        if (SystemConstants.AT_CONVERT_MAP.get(file.getName())!=null) {
             // 转换中
             return String.format(" 文件 [%s] 正在转换中", file.getName());
         }
 
         String basename = FilenameUtils.getBaseName(file.getName());
-        File targetFile = new File(file.getParent() + "/" + basename + "/" + basename + "." + outputExtension);
+        File targetFile = new File(file.getParent() + "/" + basename + "/" + basename + "." + SystemConstants.OUTPUT_EXTENSION);
         if (targetFile.exists()){
             //logger.debug(HtmlUtils.getFileEncoding(targetFile));
             String data = IOUtils.toString(new FileInputStream(targetFile), HtmlUtils.getFileEncoding(targetFile));
@@ -117,7 +101,7 @@ public class FileServiceImpl implements FileService {
             //data = HtmlUtils.replaceHtmlTag(data, "img", "src", "src=\"" + request.getContextPath() + "/index/loadFileImg?name=" + name + "&imgname=", "\"");
             return data;
         }
-        return "";
+        return "当前文档转换失败";
     }
 
     @Override

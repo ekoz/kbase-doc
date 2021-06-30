@@ -22,8 +22,6 @@ public interface FileService {
      */
     Boolean upload(MultipartFile multipartFile);
 
-    void convert(File inputFile, File outputFile) throws FileNotFoundException;
-
     String loadData(String filename) throws IOException;
 
     /**
