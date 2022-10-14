@@ -1,7 +1,7 @@
 /*
  * Power by www.xiaoi.com
  */
-package com.eastrobot.doc.web;
+package com.eastrobot.doc.web.controller;
 
 import java.io.File;
 import java.io.IOException;

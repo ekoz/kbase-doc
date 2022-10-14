@@ -38,12 +38,11 @@ public class WordProcessor extends AbstractProcessor {
 	/**
 	 * 传入一个 word 文件，和一个水印文件，给这个 word文件加水印
 	 * @author eko.zhan at 2018年9月17日 上午11:09:56
-	 * @param file
-	 * @param imgFile
-	 * @throws Docx4JException 
+	 * @throws Docx4JException
 	 * @throws JAXBException 
 	 * @throws IOException 
 	 */
+	@Override
 	public void process() throws WatermarkException {
 		try {
 			WordprocessingMLPackage wordMLPackage = Docx4J.load(file);

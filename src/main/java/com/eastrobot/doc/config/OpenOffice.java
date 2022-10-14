@@ -20,7 +20,7 @@ import org.springframework.stereotype.Component;
 public class OpenOffice {
 
 	@Value("${office.port}")
-    private String port;
+	private String port;
 	@Value("${office.home}")
 	private String home;
 	@Value("${office.profile}")

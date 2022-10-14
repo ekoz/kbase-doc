@@ -54,7 +54,6 @@ public class ExcelProcessor extends AbstractProcessor {
 	
 	/**
 	 * 使用水印图片作为excel背景，达到水印效果<但打印时不会生效>
-	 * @param pkg
 	 * @param worksheet
 	 * @throws Docx4JException 
 	 * @throws Exception
@@ -68,8 +67,6 @@ public class ExcelProcessor extends AbstractProcessor {
 			Relationship sourceRelationship = imagePart.getSourceRelationships().get(0);
 			String imageRelId = sourceRelationship.getId();
 			ctSheetBackgroundPicture.setId(imageRelId);
-		} catch (IOException e) {
-			e.printStackTrace();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

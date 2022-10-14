@@ -34,7 +34,6 @@ public class PowerPointProcessor extends AbstractProcessor {
 	 * @author eko.zhan at 2018年9月17日 下午2:10:50
 	 * @throws IOException 
 	 * @throws  
-	 * @throws Docx4JException
 	 * @throws Xlsx4jException
 	 */
 	@Override
