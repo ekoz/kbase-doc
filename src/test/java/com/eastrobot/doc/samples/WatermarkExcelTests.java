@@ -166,7 +166,7 @@ public class WatermarkExcelTests {
 		font.setFontName("Verdana");
 		rtxt.applyFont(font);
 		textbox.setText(rtxt);
-		textbox.setLineStyle(XSSFShape.EMU_PER_POINT);
+//		textbox.setLineStyle(XSSFShape);
 		textbox.setNoFill(true);
 		workbook.write(new FileOutputStream(filepath));
 		workbook.close();
