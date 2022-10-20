@@ -20,9 +20,9 @@
 			<script id="templateList" type="text/html">
 				{{each $data item index}}
 					<tr>
-						<td><a href="javascript:void(0);">{{item.name}}</a></td>
+						<td><a href="javascript:void(0);" _id="{{item.id}}">{{item.name}}</a></td>
 						<td>{{item.path}}</td>
-						<td>{{item.size}}</td>
+						<td>{{item.sizeAlias}}</td>
 						<td><button class="btn btn-danger">删除</button></td>
 					</tr>
 				{{/each}}

@@ -20,7 +20,7 @@
 
 	<body>
 		<th:block th:include="body :: bodyFragment" th:with="key='edit'" />
-		<input type="hidden" id="name" th:value="${#httpServletRequest.getParameter('name')}" />
+		<input type="hidden" id="id" th:value="${#httpServletRequest.getParameter('id')}" />
 		<div class="container" >
 			<div class="inner-container">
 				<textarea cols="80" id="docEditor" name="docEditor" rows="10">

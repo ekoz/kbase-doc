@@ -5,7 +5,7 @@ package com.eastrobot.doc.web.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import com.eastrobot.doc.config.BaseController;
-import com.eastrobot.doc.config.SystemConstants;
+import com.eastrobot.doc.dao.AttachmentRepository;
 import com.eastrobot.doc.model.entity.Attachment;
 import com.eastrobot.doc.service.FileService;
 import com.eastrobot.doc.util.HtmlUtils;
@@ -19,11 +19,10 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Calendar;
-import java.util.List;
+import java.util.Optional;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 import org.springframework.http.HttpHeaders;
@@ -31,6 +30,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.ResourceUtils;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -53,6 +54,9 @@ public class IndexController extends BaseController {
 	@Resource
 	FileService fileService;
 
+	@Resource
+  AttachmentRepository attachmentRepository;
+
 	/**
 	 * 文件列表
 	 * @author eko.zhan at 2017年8月9日 下午8:32:19
@@ -61,50 +65,50 @@ public class IndexController extends BaseController {
 	 */
 	@ApiOperation(value="获取文件数据列表", notes="获取固定路径下的文件，并返回文件名，文件所在路径和文件大小")
 	@RequestMapping(value="getDataList", method=RequestMethod.POST)
-	public List<Attachment> getDataList() throws FileNotFoundException{
+	public Iterable<Attachment> getDataList() throws FileNotFoundException{
 		return fileService.list();
 	}
 	
 	/**
 	 * 加载文件
 	 * @author eko.zhan at 2017年8月9日 下午8:32:30
-	 * @param name
+	 * @param id
 	 * @return
 	 * @throws FileNotFoundException
 	 * @throws IOException
 	 */
-	@ApiOperation(value="根据指定的文件名称获取文件内容", notes="返回文件内容会自动过滤图片信息")
+	@ApiOperation(value="根据指定的文件id获取文件内容", notes="返回文件内容会自动过滤图片信息")
 	@ApiImplicitParams({
-		@ApiImplicitParam(name="name", value="文件相对路径", required=true, dataType="String")
+		@ApiImplicitParam(name="id", value="文件id", required=true, dataType="String")
 	})
 	@RequestMapping(value="loadFileData", produces="text/plain;charset=utf-8", method=RequestMethod.POST)
-	public String loadFileData(String name) throws IOException{
-		return fileService.loadData(name);
+	public String loadFileData(Long id) throws IOException{
+		return fileService.loadData(id);
 	}
 	
 	/**
 	 * 加载 html 中的图片资源
 	 * @author eko.zhan at 2017年8月9日 下午8:32:06
-	 * @param name
+	 * @param id
 	 * @param imgname
 	 * @return
 	 * @throws IOException
 	 */
 	@ApiOperation(value="加载图片内容", notes="获取word文档中内嵌的图片资源，返回图片内容")
 	@ApiImplicitParams({
-		@ApiImplicitParam(name="name", value="文件相对路径", required=true, dataType="String"),
+		@ApiImplicitParam(name="id", value="文件id", required=true, dataType="Long"),
 		@ApiImplicitParam(name="imgname", value="图片名称", required=true, dataType="String")
 	})
 	@RequestMapping(value="loadFileImg", method=RequestMethod.GET)
-	public ResponseEntity<byte[]> loadFileImg(String name, String imgname){
+	public ResponseEntity<byte[]> loadFileImg(Long id, String imgname){
 		try {
-			String basename = FilenameUtils.getBaseName(name);
+			String basename = id + "";
 			File file = ResourceUtils.getFile("classpath:static/DATAS/" + basename + "/" + imgname);
 			HttpHeaders headers = new HttpHeaders();
 			headers.setContentType(MediaType.IMAGE_PNG);
 			return new ResponseEntity<byte[]>(IOUtils.toByteArray(new FileInputStream(file)), headers, HttpStatus.OK);
 		} catch (FileNotFoundException e) {
-			log.error("文件[" + name + "]不存在, " + e.getMessage());
+			log.error("文件[" + id + "]不存在, " + e.getMessage());
 		} catch (IOException e) {
 			log.error(e.getMessage());
 			e.printStackTrace();
@@ -131,17 +135,17 @@ public class IndexController extends BaseController {
 	/**
 	 * 保存html内容
 	 * @author eko.zhan at 2017年8月9日 下午9:04:20
-	 * @param name
+	 * @param id
 	 * @param data
 	 * @throws IOException 
 	 */
 	@ApiOperation(value="保存文件", notes="")
 	@ApiImplicitParams({
-		@ApiImplicitParam(name="name", value="文件相对路径", required=true, dataType="String"),
+		@ApiImplicitParam(name="id", value="文件id", required=true, dataType="Long"),
 		@ApiImplicitParam(name="data", value="文件内容", required=true, dataType="String")
 	})
 	@RequestMapping(value="saveFileData", method=RequestMethod.POST)
-	public JSONObject saveFileData(String name, String data, HttpServletRequest request){
+	public JSONObject saveFileData(Long id, String data, HttpServletRequest request){
 		//TODO 这是一个伪保存，只是修改了 HTML 内容，并未修改 file 文件，如果用户单击下载，依然会存在问题
 		//TODO 如果用户修改了图片，如何处理？
 		JSONObject json = new JSONObject();
@@ -149,7 +153,17 @@ public class IndexController extends BaseController {
 		try {
 			//DONE 优化底层 DefaultDocumentFormatRegistry.java 后可实现html转docx
 			//boolean is07Xml = false; //是否是07以后的文档（docx/xlsx/pptx/），如果是，需要将html转成97版本的office文件，再从97转成07，直接将html转成07存在问题
-			File file = ResourceUtils.getFile("classpath:static/DATAS/" + name);
+      Optional<Attachment> attachmentOptional = attachmentRepository.findById(id);
+
+      if (!attachmentOptional.isPresent()) {
+        json.put("result", 0);
+        return json;
+      }
+
+      Attachment attachment = attachmentOptional.get();
+
+      File file = ResourceUtils.getFile(attachment.getPath());
+      String name = FilenameUtils.getName(attachment.getPath());
 			File newFile = new File(file.getParent() + "/" + Calendar.getInstance().getTimeInMillis() + "_" + name);
 			if (!name.toLowerCase().endsWith("x")){
 				newFile = new File(file.getParent() + "/" + Calendar.getInstance().getTimeInMillis() + "_" + name + "x");
@@ -159,15 +173,21 @@ public class IndexController extends BaseController {
 			if (targetFile.exists()){
 				///将html中的body内容替换为当前 data 数据
 				///String htmlData = IOUtils.toString(new FileInputStream(targetFile), HtmlUtils.getFileEncoding(targetFile));
-				String htmlData = (String)request.getSession().getAttribute(SystemConstants.HTML_HEADER) + data + HtmlUtils.FOOT_TEMPLATE;
+//				String htmlData = (String)request.getSession().getAttribute(SystemConstants.HTML_HEADER) + data + HtmlUtils.FOOT_TEMPLATE;
+
+        String htmlData = data + HtmlUtils.FOOT_TEMPLATE;
+
+
 				//DONE 如何处理文件编码？保存后尽管通过请求能访问中文内容，但是直接磁盘双击html文件显示乱码
 				//add by eko.zhan at 2017-08-11 14:55 解决方案：重写Html头，编码修改为 utf-8
 				///IOUtils.write(htmlData.getBytes(HtmlUtils.UTF8), new FileOutputStream(targetFile));
 				IOUtils.write(htmlData.getBytes(), new FileOutputStream(targetFile));
+
 				//DONE 由于html文件编码不正确，导致转换成word后文件编码也不正确
 				//add by eko.zhan at 2017-08-11 15:05 上面处理了html编码后，转换的编码问题也相应解决了
 				//TODO 由html转换成doc会导致doc样式有误
 				convert(targetFile, newFile);
+
 			}
 		} catch (IOException e) {
 			json.put("result", 0);
@@ -179,31 +199,15 @@ public class IndexController extends BaseController {
 	/**
 	 * 删除文件
 	 * @author eko.zhan at 2017年8月9日 下午9:32:18
-	 * @param name
+	 * @param id
 	 * @return
 	 */
 	@ApiOperation(value="删除文件", notes="")
 	@ApiImplicitParams({
-		@ApiImplicitParam(name="name", value="文件相对路径", required=true, dataType="String")
+		@ApiImplicitParam(name="id", value="文件id", required=true, dataType="Long")
 	})
-	@RequestMapping(value="delete", method=RequestMethod.POST)
-	public JSONObject delete(String name){
-		//TODO windows操作系统上如果html文件被占用则无法删除，是否可以用 File.creteTempFile 来解决？
-		JSONObject json = new JSONObject();
-		json.put("result", 1);
-		try {
-			File file = ResourceUtils.getFile("classpath:static/DATAS/" + name);
-			String basename = FilenameUtils.getBaseName(file.getName());
-			File targetDir = new File(file.getParent() + "/" + basename);
-			if (targetDir.exists()){
-				FileUtils.deleteDirectory(targetDir);
-			}
-			FileUtils.forceDelete(file);
-		} catch (IOException e) {
-			json.put("result", 0);
-			json.put("msg", e.getMessage());
-			e.printStackTrace();
-		}
-		return json;
+	@DeleteMapping("{id}")
+	public void delete(@PathVariable("id") Long id){
+		fileService.delete(id);
 	}
 }

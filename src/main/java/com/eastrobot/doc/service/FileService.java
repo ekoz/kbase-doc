@@ -1,12 +1,9 @@
 package com.eastrobot.doc.service;
 
 import com.eastrobot.doc.model.entity.Attachment;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.List;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * @author <a href="mailto:eko.z@outlook.com">eko.zhan</a>
@@ -22,12 +19,14 @@ public interface FileService {
      */
     Boolean upload(MultipartFile multipartFile);
 
-    String loadData(String filename) throws IOException;
+    String loadData(Long id) throws IOException;
 
     /**
      * 获取指定目录下的文件列表
      * @return
      * @throws FileNotFoundException
      */
-    List<Attachment> list() throws FileNotFoundException;
+    Iterable<Attachment> list() throws FileNotFoundException;
+
+    void delete(Long id);
 }

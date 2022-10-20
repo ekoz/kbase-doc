@@ -108,7 +108,7 @@ var config = {
 		{ name: 'Square Bulleted List', element: 'ul', styles: { 'list-style-type': 'square' } }
 	]
 };
-$.post($.kbase.ctx + '/index/loadFileData', {name: $('#name').val()}, function(data){
+$.post($.kbase.ctx + '/index/loadFileData', {id: $('#id').val()}, function(data){
 	CKEDITOR.replace( 'docEditor', config );
 	//CKEDITOR.instances.docEditor.setData(data);
 	
@@ -122,7 +122,7 @@ $.post($.kbase.ctx + '/index/loadFileData', {name: $('#name').val()}, function(d
     		$(imgList).each(function(i, img){
     			var _url = $(img).attr('src');
     			if (_url.indexOf('http')==-1){
-    				$(img).attr('src', $.kbase.ctx + '/index/loadFileImg?name=' + $('#name').val() + '&imgname=' + $(img).attr('src'));
+    				$(img).attr('src', $.kbase.ctx + '/index/loadFileImg?id=' + $('#id').val() + '&imgname=' + $(img).attr('src'));
     			}
     		});
     	}, 100);
@@ -147,7 +147,7 @@ $('#btnModify').click(function(){
 		//保存
 		if (window.confirm('确认保存修改吗')){
 			var data = CKEDITOR.instances.docEditor.getData();
-			$.post($.kbase.ctx + '/index/saveFileData', {name: $('#name').val(), data: data}, function(data){
+			$.post($.kbase.ctx + '/index/saveFileData', {id: $('#id').val(), data: data}, function(data){
 				if (data.result==1){
 					alert('保存成功');
 				}

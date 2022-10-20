@@ -3,6 +3,7 @@
  */
 package com.eastrobot.doc.util;
 
+import java.text.DecimalFormat;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.ArrayUtils;
 
@@ -158,5 +159,12 @@ public class FileExtensionUtils {
         } else {
             return Boolean.FALSE;
         }
+    }
+
+    public static String readFilesize(Long size) {
+      final String[] units = new String[] {"B", "KB", "MB", "GB", "TB"};
+      int digitGroups = (int)(Math.log10(size) / Math.log10(1024));
+      return new DecimalFormat("#,##0.#").format(size / Math.pow(1024, digitGroups))
+          + " " + units[digitGroups];
     }
 }

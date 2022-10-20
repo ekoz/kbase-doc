@@ -6,6 +6,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -30,11 +31,28 @@ public class Attachment implements Serializable {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
+  /**
+   * 源文件路径
+   */
   private String path;
 
+  /**
+   * 目标文件路径
+   */
+  private String targetPath;
+
+  /**
+   * 文件显示名称
+   */
   private String name;
 
   private Long size;
+
+  /**
+   * 文档大小，用于显示
+   */
+  @Transient
+  private String sizeAlias;
 
   private LocalDateTime createTime;
 
