@@ -27,9 +27,4 @@ public class SystemConstants {
 	 */
 	public final static String OUTPUT_EXTENSION = "html";
 
-	/**
-	 * 正在转换的文件集合
-	 */
-	public static Map<String, Integer> AT_CONVERT_MAP = Maps.newHashMap();
-	
 }

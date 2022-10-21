@@ -1,5 +1,6 @@
 package com.eastrobot.doc.service;
 
+import com.eastrobot.doc.model.entity.Attachment;
 import java.io.File;
 import java.io.FileNotFoundException;
 
@@ -10,11 +11,14 @@ import java.io.FileNotFoundException;
  */
 public interface ConvertService {
 
-    /**
-     * 文档转换
-     * @param inputFile
-     * @param outputFile
-     * @throws FileNotFoundException
-     */
-    void exec(File inputFile, File outputFile) throws FileNotFoundException;
+  /**
+   * 文件转换
+   * @param attachment
+   */
+  void exec(Attachment attachment) throws FileNotFoundException;
+
+  /**
+   * 文档转换
+   */
+  void exec(File inputFile, File outputFile) throws FileNotFoundException;
 }

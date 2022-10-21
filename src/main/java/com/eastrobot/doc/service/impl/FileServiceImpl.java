@@ -52,6 +52,8 @@ public class FileServiceImpl implements FileService {
       Attachment attachment = Attachment.builder()
           .name(multipartFile.getOriginalFilename())
           .size(multipartFile.getSize())
+          // 待转换
+          .status(0)
           .createTime(LocalDateTime.now())
           .build();
       attachmentRepository.save(attachment);
@@ -72,7 +74,7 @@ public class FileServiceImpl implements FileService {
       ServletRequestAttributes servletRequestAttributes = (ServletRequestAttributes) (RequestContextHolder
           .currentRequestAttributes());
       RequestContextHolder.setRequestAttributes(servletRequestAttributes, true);
-      convertService.exec(file, outputFile);
+      convertService.exec(attachment);
     } catch (IOException e) {
       return false;
     }
@@ -88,7 +90,7 @@ public class FileServiceImpl implements FileService {
       Attachment attachment = attachmentOptional.get();
       File file = ResourceUtils.getFile(attachment.getPath());
 
-      if (SystemConstants.AT_CONVERT_MAP.get(file.getName()) != null) {
+      if (attachment.getStatus()!=1) {
         // 转换中
         return String.format(" 文件 [%s] 正在转换中", file.getName());
       }

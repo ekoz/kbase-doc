@@ -54,6 +54,11 @@ public class Attachment implements Serializable {
   @Transient
   private String sizeAlias;
 
+  /**
+   * 0-待转换；1-已转换；-1-转换失败
+   */
+  private Integer status;
+
   private LocalDateTime createTime;
 
 }
