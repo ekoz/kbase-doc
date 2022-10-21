@@ -9,9 +9,9 @@ import org.springframework.scheduling.annotation.EnableAsync;
  */
 @SpringBootApplication
 @EnableAsync
-public class KbaseDocApplication {
+public class KbaseDocAlphaApplication {
 	
 	public static void main(String[] args) {
-		SpringApplication.run(KbaseDocApplication.class, args);
+		SpringApplication.run(KbaseDocAlphaApplication.class, args);
 	}
 }
