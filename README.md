@@ -12,19 +12,19 @@
 #### 文件列表
 展示当前用户已上传的文件，并提供预览和删除操作
 
-![列表页面](src/main/resources/static/img/list.png?raw=true "列表页面")
+![列表页面](kbase-doc-alpha/src/main/resources/static/img/list.png?raw=true "列表页面")
 
 #### 上传文件
 上传文件时直接利用 [LibreOffice](https://www.libreoffice.org/) 将文件转换成 html并保存
 
-![上传页面](src/main/resources/static/img/upload.png?raw=true "上传页面")
+![上传页面](kbase-doc-alpha/src/main/resources/static/img/upload.png?raw=true "上传页面")
 
 #### 预览文件
 用户可以在预览界面单击编辑按钮，并实现保存或保存为版本功能
 
-![预览页面](src/main/resources/static/img/read.png?raw=true "预览页面")
+![预览页面](kbase-doc-alpha/src/main/resources/static/img/read.png?raw=true "预览页面")
 
-![编辑页面](src/main/resources/static/img/edit.png?raw=true "编辑页面")
+![编辑页面](kbase-doc-alpha/src/main/resources/static/img/edit.png?raw=true "编辑页面")
 
 ### 已知问题
 1. word中包含图片如何处理？目前是用Html正则将图片加上一个 地址 进行加载，这样在保存的时候，html文件的图片地址有异常
