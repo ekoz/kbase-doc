@@ -35,7 +35,7 @@
     <swagger.version>2.9.2</swagger.version>
     <sqlite-jdbc.version>3.36.0.3</sqlite-jdbc.version>
     <sqlite-dialect.version>0.1.2</sqlite-dialect.version>
-    <guava.version>29.0-jre</guava.version>
+    <guava.version>31.1-jre</guava.version>
   </properties>
 
   <dependencies>
