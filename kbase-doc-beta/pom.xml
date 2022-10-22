@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <parent>
+    <artifactId>kbase-doc</artifactId>
+    <groupId>com.eastrobot</groupId>
+    <version>0.0.1-SNAPSHOT</version>
+  </parent>
+  <modelVersion>4.0.0</modelVersion>
+
+  <artifactId>kbase-doc-beta</artifactId>
+
+  <properties>
+    <jodconverter.version>4.4.4</jodconverter.version>
+    <libreoffice.version>7.4.1</libreoffice.version>
+  </properties>
+
+  <dependencies>
+
+    <!-- https://mvnrepository.com/artifact/org.jodconverter/jodconverter-local -->
+    <!--
+        这里用 jodconverter-local-lo 时，会遇到报错
+        https://github.com/sbraconnier/jodconverter/issues/113
+        https://github.com/sbraconnier/jodconverter/issues/309
+        https://github.com/sbraconnier/jodconverter/commit/bfae421daf1fa22968c4c17f9fb93bca0acb7806
+     -->
+    <dependency>
+      <groupId>org.jodconverter</groupId>
+      <artifactId>jodconverter-local</artifactId>
+      <version>${jodconverter.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.jodconverter</groupId>
+      <artifactId>jodconverter-spring-boot-starter</artifactId>
+      <version>${jodconverter.version}</version>
+    </dependency>
+
+    <!--&lt;!&ndash; https://mvnrepository.com/artifact/org.libreoffice/juh &ndash;&gt;-->
+    <!--<dependency>-->
+      <!--<groupId>org.libreoffice</groupId>-->
+      <!--<artifactId>juh</artifactId>-->
+      <!--<version>${libreoffice.version}</version>-->
+    <!--</dependency>-->
+
+    <!--&lt;!&ndash; https://mvnrepository.com/artifact/org.libreoffice/juh &ndash;&gt;-->
+    <!--<dependency>-->
+      <!--<groupId>org.libreoffice</groupId>-->
+      <!--<artifactId>jurt</artifactId>-->
+      <!--<version>${libreoffice.version}</version>-->
+    <!--</dependency>-->
+
+    <!--&lt;!&ndash; https://mvnrepository.com/artifact/org.libreoffice/juh &ndash;&gt;-->
+    <!--<dependency>-->
+      <!--<groupId>org.libreoffice</groupId>-->
+      <!--<artifactId>ridl</artifactId>-->
+      <!--<version>${libreoffice.version}</version>-->
+    <!--</dependency>-->
+
+    <!--&lt;!&ndash; https://mvnrepository.com/artifact/org.libreoffice/juh &ndash;&gt;-->
+    <!--<dependency>-->
+      <!--<groupId>org.libreoffice</groupId>-->
+      <!--<artifactId>unoil</artifactId>-->
+      <!--<version>${libreoffice.version}</version>-->
+    <!--</dependency>-->
+
+    <dependency>
+      <groupId>io.springfox</groupId>
+      <artifactId>springfox-boot-starter</artifactId>
+      <version>3.0.0</version>
+    </dependency>
+
+
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-devtools</artifactId>
+      <scope>runtime</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.projectlombok</groupId>
+      <artifactId>lombok</artifactId>
+      <optional>true</optional>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-test</artifactId>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+
+</project>
