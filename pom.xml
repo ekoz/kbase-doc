@@ -33,7 +33,7 @@
     <commons.lang3.version>3.6</commons.lang3.version>
     <commons.io.version>2.7</commons.io.version>
     <swagger.version>2.9.2</swagger.version>
-    <sqlite-jdbc.version>3.36.0.3</sqlite-jdbc.version>
+    <sqlite-jdbc.version>3.41.2.2</sqlite-jdbc.version>
     <sqlite-dialect.version>0.1.2</sqlite-dialect.version>
     <guava.version>31.1-jre</guava.version>
   </properties>
