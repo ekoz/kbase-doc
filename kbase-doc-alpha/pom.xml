@@ -30,7 +30,7 @@
     <dependency>
       <groupId>org.zwobble.mammoth</groupId>
       <artifactId>mammoth</artifactId>
-      <version>0.0.4</version>
+      <version>1.11.0</version>
     </dependency>
     <!-- jodconverter-core -->
     <dependency>
